@@ -1,6 +1,6 @@
 # MM-GOV-002 — DECISION_INDEX.md
 
-**Version:** 1.2
+**Version:** 1.3
 **Status:** Approved
 **Owner:** Engineering
 
@@ -69,6 +69,19 @@ The Decision Index is the authoritative catalog of all approved architectural an
 
 ---
 
+# Deferred Decisions
+
+Some approved ADRs describe a target end-state that is intentionally not fully implemented yet because the project currently has a single contributor. These are not oversights or non-compliance — each is a deliberate, scoped decision with a stated condition for revisiting it, tracked here so it is not mistaken for drift during a future audit.
+
+| ID | Decision | Related ADR | Current State | Revisit Trigger |
+|----|----------|--------------|----------------|------------------|
+| DEF-001 | Staging environment (pre-production verification tier) not provisioned | ADR-009 | Only Local, Preview, and Production environments exist | Before first release involving real user data, or when a second contributor joins, whichever comes first |
+| DEF-002 | `main` branch protection: pull-request requirement, up-to-date-branch requirement, and admin enforcement not enabled | ADR-003, ADR-009 | `main` is protected against force-push and deletion, with required passing status checks; direct pushes without a PR are otherwise still possible | When a second contributor gains push access to the repository |
+
+Deferred decisions are reviewed whenever their revisit trigger occurs, or at each major roadmap phase boundary, whichever comes first. Resolving a deferral means either implementing the described end-state or replacing it with an approved ADR change.
+
+---
+
 # Decision Review Process
 
 1. Identify need.
@@ -121,3 +134,7 @@ This process is formalized in ADR-012.
 ## Version 1.2
 
 - Approved ADR-011 (Documentation First Development) and ADR-012 (ADR-Based Architecture Changes).
+
+## Version 1.3
+
+- Added the Deferred Decisions log (DEF-001, DEF-002), tracking scoped, deliberate gaps between approved ADR end-states and current single-contributor implementation: the Staging environment (ADR-009) and full `main` branch protection (ADR-003, ADR-009).
