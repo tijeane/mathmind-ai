@@ -4,8 +4,8 @@
 | Field | Value |
 |-------|-------|
 | Status | Approved |
-| Version | 1.0 |
-| Date | 2026-08-03 |
+| Version | 1.1 |
+| Date | 2026-08-09 |
 | Owner | Engineering |
 | Category | Implementation |
 
@@ -392,8 +392,8 @@ A feature is complete when:
 
 | Milestone | Description |
 |------------|-------------|
-| Alpha | Core platform functional |
-| Beta | AI tutor and analytics complete |
+| Alpha | Core platform functional, including a minimal AI tutor flow (single prompt strategy, no model routing) — see MM-MVP-001 for the exact MVP boundary |
+| Beta | Full AI tutor system (model routing, prompt management, response validation per MM-ARC-001) and analytics complete |
 | Release Candidate | Production validation complete |
 | Version 1.0 | Public launch |
 
@@ -454,6 +454,7 @@ Product success metrics are defined in MM-VSN-001 and MM-LRN-001.
 
 - MM-VSN-001 — Product Vision
 - MM-LRN-001 — Learning System Specification
+- MM-MVP-001 — MathMind MVP Definition (defines the Alpha milestone's exact scope)
 
 ---
 
@@ -464,3 +465,8 @@ Product success metrics are defined in MM-VSN-001 and MM-LRN-001.
 - Initial implementation roadmap approved.
 - Defined phased delivery model.
 - Established dependencies, milestones, Definition of Done, and production readiness criteria.
+
+## Version 1.1
+
+- Resolved a conflict between the Release Milestones table and MM-MVP-001: the table previously assigned "AI tutor" entirely to Beta, while MM-MVP-001 (approved separately) scopes a minimal AI tutor flow into the MVP/Alpha release. Reworded Alpha to explicitly include the minimal flow and Beta to cover the full system (model routing, prompt management, response validation), so the two documents no longer contradict each other.
+- Added MM-MVP-001 to the Product-related documents list; it was referenced by other approved documents but not listed here.
