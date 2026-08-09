@@ -1,0 +1,15 @@
+# Normalize line endings to LF in the repository regardless of OS checkout
+# settings, so Prettier/ESLint checks and diffs are consistent across
+# contributors (Windows/macOS/Linux). Git still checks files out using the
+# platform's native line endings unless core.autocrlf is overridden locally.
+* text=auto eol=lf
+
+# Binary files — never touch line endings
+*.ico binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.woff binary
+*.woff2 binary

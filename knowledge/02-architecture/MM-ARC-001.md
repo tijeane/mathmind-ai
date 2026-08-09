@@ -126,7 +126,7 @@ Architecture is documented before implementation.
 
 Reference:
 
-ADR-001
+ADR-011
 
 ---
 
@@ -363,7 +363,7 @@ Architectural deviations require a new ADR.
 
 - MM-GOV-001 — Project Handbook
 - MM-GOV-002 — Decision Index
-- ADR-001 through ADR-010
+- ADR-001 through ADR-012 (see MM-GOV-002; ADR-001 superseded by ADR-005)
 - DB-000 — Database Architecture & Standards
 - MM-VSN-001 — Product Vision
 - MM-LRN-001 — Learning System Specification
@@ -4031,7 +4031,7 @@ Every architectural decision documented in this specification is intended to sup
 
 ## Architecture
 
-- ADR-001 through ADR-010
+- ADR-001 through ADR-012 (see MM-GOV-002; ADR-001 superseded by ADR-005)
 - DB-000 — Database Architecture & Standards
 
 ## Product

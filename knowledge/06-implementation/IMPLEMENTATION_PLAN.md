@@ -27,7 +27,7 @@ No implementation phase begins until prerequisite phases are complete.
 
 Implementation follows:
 
-- Documentation First (ADR-001)
+- Documentation First (ADR-011)
 - Approved Architecture Only
 - Continuous Integration
 - Incremental Delivery
@@ -439,7 +439,7 @@ Product success metrics are defined in MM-VSN-001 and MM-LRN-001.
 ## Architecture
 
 - MM-ARC-001 — System Architecture
-- ADR-001 through ADR-010
+- ADR-001 through ADR-012 (see MM-GOV-002; ADR-001 superseded by ADR-005)
 
 ## Database
 

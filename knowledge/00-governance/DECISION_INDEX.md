@@ -1,6 +1,6 @@
 # MM-GOV-002 — DECISION_INDEX.md
 
-**Version:** 1.1
+**Version:** 1.2
 **Status:** Approved
 **Owner:** Engineering
 
@@ -50,10 +50,10 @@ The Decision Index is the authoritative catalog of all approved architectural an
 | ADR-008 | Testing & Quality Assurance Strategy | Quality | Approved | 1.0 |
 | ADR-009 | Continuous Integration, Continuous Deployment & Release Pipeline | Engineering | Approved | 1.0 |
 | ADR-010 | Versioning & Release Management | Release | Approved | 1.0 |
-| ADR-011 | Documentation First Development | Architecture | Proposed | 1.0 |
-| ADR-012 | ADR-Based Architecture Changes | Architecture | Proposed | 1.0 |
+| ADR-011 | Documentation First Development | Architecture | Approved | 1.0 |
+| ADR-012 | ADR-Based Architecture Changes | Architecture | Approved | 1.0 |
 
-> **Correction note (v1.1):** Prior versions of this catalog listed titles for ADR-001 through ADR-010 that did not match the actual content of those files (e.g. ADR-001 was listed as "Documentation First Development" but the file contains "Technology Stack"). This version reflects the real, approved file contents. The two concepts the old catalog assumed existed under ADR-001 and ADR-003 — Documentation First Development and the ADR change-management process — were never actually written under any number. They are now captured as new ADR-011 and ADR-012, both **Proposed**, pending Engineering/Architect approval. ADR-001 is retained unmodified for historical traceability, per the "ADRs are sequentially numbered and never deleted" rule, and its status is updated to Superseded since ADR-005 covers the same Technology Stack decision more completely.
+> **Correction note (v1.1):** Prior versions of this catalog listed titles for ADR-001 through ADR-010 that did not match the actual content of those files (e.g. ADR-001 was listed as "Documentation First Development" but the file contains "Technology Stack"). ADR-001 is retained unmodified for historical traceability and marked Superseded by ADR-005. Documentation First Development and the ADR change-management process are now captured as ADR-011 and ADR-012 (Approved in v1.2).
 
 ---
 
@@ -79,7 +79,7 @@ The Decision Index is the authoritative catalog of all approved architectural an
 6. Implement.
 7. Verify compliance.
 
-This process is formalized in ADR-012 (Proposed).
+This process is formalized in ADR-012.
 
 ---
 
@@ -117,3 +117,7 @@ This process is formalized in ADR-012 (Proposed).
 - Corrected ADR-001 through ADR-010 titles to match actual file contents.
 - Marked ADR-001 as Superseded by ADR-005 (duplicate Technology Stack decision).
 - Added ADR-011 (Documentation First Development) and ADR-012 (ADR-Based Architecture Changes) as Proposed — these concepts were referenced throughout the knowledge base but never actually written.
+
+## Version 1.2
+
+- Approved ADR-011 (Documentation First Development) and ADR-012 (ADR-Based Architecture Changes).
