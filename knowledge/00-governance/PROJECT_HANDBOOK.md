@@ -1,7 +1,7 @@
 # MM-GOV-001 — PROJECT_HANDBOOK.md
 
-**Version:** 1.0  
-**Status:** Approved  
+**Version:** 1.1
+**Status:** Approved
 **Owner:** Engineering
 
 ---
@@ -236,26 +236,34 @@ Focus is now implementation and incremental feature delivery.
 
 # Roadmap
 
+This section is kept in exact sync with `IMPLEMENTATION_PLAN.md`, which is authoritative for implementation sequencing. See `ROADMAP.md` in this directory for the full, informational-level detail per phase.
+
+## Phase 0
+Foundation
+
 ## Phase 1
-Governance and architecture
+Identity & Authentication
 
 ## Phase 2
-Core platform
+Learning Platform
 
 ## Phase 3
-Learning engine
+Practice Engine
 
 ## Phase 4
-AI tutoring
+Assessment System
 
 ## Phase 5
-Analytics
+AI Tutor
 
 ## Phase 6
-Performance optimization
+Analytics
 
 ## Phase 7
-Enterprise readiness
+Administration
+
+## Phase 8
+Production Readiness
 
 ---
 
@@ -297,3 +305,8 @@ Application releases independently follow semantic versioning.
 - AI collaboration standards defined
 - Repository standards established
 - Versioning policy adopted
+
+## Version 1.1
+
+- Corrected the Roadmap section: replaced the previous Phase 1-7 list (Governance/Core Platform/Learning Engine/AI Tutoring/Analytics/Performance Optimization/Enterprise Readiness), which diverged from `IMPLEMENTATION_PLAN.md`, with the actual Phase 0-8 list from `IMPLEMENTATION_PLAN.md`.
+- Patch-level correction per this document's own Versioning Policy (corrections and clarifications).
