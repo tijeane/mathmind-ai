@@ -42,3 +42,28 @@ export async function createClient() {
     },
   });
 }
+
+/**
+ * MM-104: reads the current user's role from `profiles`, subject to RLS
+ * (the "select_own_profile" policy means this can only ever return the
+ * caller's own role, never another user's). Returns null if there is no
+ * logged-in user or the row/column can't be read.
+ */
+export async function getUserRole(): Promise<string | null> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return null;
+  }
+
+  const { data, error } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return data.role;
+}
