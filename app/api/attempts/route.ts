@@ -91,10 +91,23 @@ export async function POST(request: Request) {
     .single();
 
   if (insertError || !attempt) {
-    return NextResponse.json(
-      { error: { code: "INTERNAL", message: insertError?.message ?? "Could not record attempt." } },
-      { status: 500 },
-    );
+    const message = insertError?.message ?? "Could not record attempt.";
+    // Missing profiles row → FK violation (PostgREST 409). Surface a
+    // clearer client error than a generic 500.
+    if (/attempts_user_id_fkey|foreign key/i.test(message)) {
+      return NextResponse.json(
+        {
+          error: {
+            code: "PROFILE_REQUIRED",
+            message:
+              "Your student profile is missing. Sign out and register again, or contact support.",
+          },
+        },
+        { status: 409 },
+      );
+    }
+
+    return NextResponse.json({ error: { code: "INTERNAL", message } }, { status: 500 });
   }
 
   return NextResponse.json({ data: attempt }, { status: 201 });
