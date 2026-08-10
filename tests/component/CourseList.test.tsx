@@ -19,8 +19,16 @@ describe("CourseList", () => {
     );
 
     expect(screen.getByRole("heading", { name: "Fractions Foundations" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Fractions Foundations" })).toHaveAttribute(
+      "href",
+      "/courses/1",
+    );
     expect(screen.getByText("Learn fractions.")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Multiplication Basics" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Multiplication Basics" })).toHaveAttribute(
+      "href",
+      "/courses/2",
+    );
     expect(screen.getByText("Learn multiplication.")).toBeInTheDocument();
   });
 
