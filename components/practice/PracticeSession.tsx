@@ -16,11 +16,17 @@ type PracticeSessionProps = {
   initialError?: string | null;
 };
 
+type AttemptResult = {
+  id: string;
+  submitted_answer: string;
+  is_correct: boolean;
+};
+
 /**
- * MM-300: one-exercise-at-a-time practice UI. The first exercise is
- * loaded by the server page; subsequent ones come from
- * /api/exercises/next. Accepts a free-text/numeric answer but does not
- * grade it yet — correctness lands in MM-301.
+ * MM-300/MM-301: one-exercise-at-a-time practice UI. The first exercise
+ * is loaded by the server page; subsequent ones come from
+ * /api/exercises/next. Submitting an answer POSTs to /api/attempts,
+ * which grades and persists the attempt (MM-301).
  */
 export function PracticeSession({
   conceptId,
@@ -30,7 +36,7 @@ export function PracticeSession({
 }: PracticeSessionProps) {
   const [exercise, setExercise] = useState<PracticeExercise | null>(initialExercise);
   const [answer, setAnswer] = useState("");
-  const [submittedAnswer, setSubmittedAnswer] = useState<string | null>(null);
+  const [attemptResult, setAttemptResult] = useState<AttemptResult | null>(null);
   const [error, setError] = useState<string | null>(initialError);
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -38,7 +44,7 @@ export function PracticeSession({
   async function loadExercise(excludeId?: string | null) {
     setIsLoading(true);
     setError(null);
-    setSubmittedAnswer(null);
+    setAttemptResult(null);
     setAnswer("");
 
     try {
@@ -68,16 +74,41 @@ export function PracticeSession({
     }
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!exercise || !answer.trim()) {
+    if (!exercise || !answer.trim() || attemptResult !== null) {
       return;
     }
 
     setIsSubmitting(true);
-    // MM-301 will persist and grade; for now we only accept the answer.
-    setSubmittedAnswer(answer.trim());
-    setIsSubmitting(false);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/attempts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          exercise_id: exercise.id,
+          submitted_answer: answer.trim(),
+        }),
+      });
+
+      const payload = (await response.json()) as {
+        data?: AttemptResult;
+        error?: { message: string };
+      };
+
+      if (!response.ok || !payload.data) {
+        setError(payload.error?.message ?? "Could not submit your answer.");
+        return;
+      }
+
+      setAttemptResult(payload.data);
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -121,33 +152,39 @@ export function PracticeSession({
                 required
                 value={answer}
                 onChange={(event) => setAnswer(event.target.value)}
-                disabled={submittedAnswer !== null}
+                disabled={attemptResult !== null || isSubmitting}
                 className="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-500 disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
               />
             </div>
 
-            {submittedAnswer !== null && (
+            {attemptResult !== null && (
               <p
                 role="status"
                 aria-live="polite"
-                className="text-sm text-zinc-600 dark:text-zinc-400"
+                className={
+                  attemptResult.is_correct
+                    ? "text-sm text-green-700 dark:text-green-400"
+                    : "text-sm text-amber-700 dark:text-amber-400"
+                }
               >
-                Answer submitted: {submittedAnswer}. Checking correctness comes in a later update.
+                {attemptResult.is_correct
+                  ? `Correct! Your answer: ${attemptResult.submitted_answer}`
+                  : `Not quite. Your answer: ${attemptResult.submitted_answer}`}
               </p>
             )}
 
             <div className="flex flex-wrap gap-3">
               <button
                 type="submit"
-                disabled={isSubmitting || submittedAnswer !== null || !answer.trim()}
+                disabled={isSubmitting || attemptResult !== null || !answer.trim()}
                 className="rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-colors hover:bg-[#383838] disabled:cursor-not-allowed disabled:opacity-60 dark:hover:bg-[#ccc]"
               >
-                Submit answer
+                {isSubmitting ? "Submitting..." : "Submit answer"}
               </button>
               <button
                 type="button"
                 onClick={() => void loadExercise(exercise.id)}
-                disabled={isLoading}
+                disabled={isLoading || isSubmitting}
                 className="rounded-full border border-zinc-300 px-5 py-2.5 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:text-zinc-100 dark:hover:bg-zinc-900"
               >
                 Next exercise

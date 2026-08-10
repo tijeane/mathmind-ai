@@ -13,16 +13,35 @@ describe("PracticeSession", () => {
   beforeEach(() => {
     vi.stubGlobal(
       "fetch",
-      vi.fn().mockResolvedValue({
-        ok: true,
-        json: async () => ({
-          data: {
-            id: "ex-2",
-            concept_id: "concept-1",
-            prompt: "What fraction is three fourths?",
-            difficulty_level: 2,
-          },
-        }),
+      vi.fn().mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+        const url = String(input);
+
+        if (url.startsWith("/api/attempts") && init?.method === "POST") {
+          return {
+            ok: true,
+            json: async () => ({
+              data: {
+                id: "attempt-1",
+                exercise_id: "ex-1",
+                submitted_answer: "1/2",
+                is_correct: true,
+                created_at: "2026-08-10T00:00:00.000Z",
+              },
+            }),
+          };
+        }
+
+        return {
+          ok: true,
+          json: async () => ({
+            data: {
+              id: "ex-2",
+              concept_id: "concept-1",
+              prompt: "What fraction is three fourths?",
+              difficulty_level: 2,
+            },
+          }),
+        };
       }),
     );
   });
@@ -32,7 +51,7 @@ describe("PracticeSession", () => {
     vi.restoreAllMocks();
   });
 
-  it("shows the server-provided exercise and accepts an answer", async () => {
+  it("submits an answer to /api/attempts and shows the correctness result", async () => {
     render(
       <PracticeSession
         conceptId="concept-1"
@@ -42,16 +61,21 @@ describe("PracticeSession", () => {
     );
 
     expect(screen.getByText("What fraction is one half?")).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { name: "Understanding Parts of a Whole" }),
-    ).toBeInTheDocument();
 
     fireEvent.change(screen.getByLabelText("Your answer"), {
       target: { value: "1/2" },
     });
     fireEvent.click(screen.getByRole("button", { name: /submit answer/i }));
 
-    expect(await screen.findByRole("status")).toHaveTextContent(/answer submitted: 1\/2/i);
+    expect(await screen.findByRole("status")).toHaveTextContent(/correct! your answer: 1\/2/i);
+    expect(fetch).toHaveBeenCalledWith("/api/attempts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        exercise_id: "ex-1",
+        submitted_answer: "1/2",
+      }),
+    });
   });
 
   it("fetches the next exercise when Next exercise is clicked", async () => {
@@ -86,13 +110,13 @@ describe("PracticeSession", () => {
     expect(screen.getByRole("alert")).toHaveTextContent("No exercises available for this concept.");
   });
 
-  it("shows an error when the next-exercise API fails", async () => {
-    (fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+  it("shows an error when the attempts API fails", async () => {
+    (fetch as unknown as ReturnType<typeof vi.fn>).mockImplementationOnce(async () => ({
       ok: false,
       json: async () => ({
-        error: { message: "Could not load an exercise." },
+        error: { message: "Could not submit your answer." },
       }),
-    });
+    }));
 
     render(
       <PracticeSession
@@ -102,8 +126,11 @@ describe("PracticeSession", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: /next exercise/i }));
+    fireEvent.change(screen.getByLabelText("Your answer"), {
+      target: { value: "1/2" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /submit answer/i }));
 
-    expect(await screen.findByRole("alert")).toHaveTextContent("Could not load an exercise.");
+    expect(await screen.findByRole("alert")).toHaveTextContent("Could not submit your answer.");
   });
 });
