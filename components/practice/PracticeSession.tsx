@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { TutorChat } from "@/components/practice/TutorChat";
 
 export type PracticeExercise = {
   id: string;
@@ -23,10 +24,10 @@ type AttemptResult = {
 };
 
 /**
- * MM-300/MM-301: one-exercise-at-a-time practice UI. The first exercise
- * is loaded by the server page; subsequent ones come from
- * /api/exercises/next. Submitting an answer POSTs to /api/attempts,
- * which grades and persists the attempt (MM-301).
+ * MM-300/MM-301/MM-504: one-exercise-at-a-time practice UI. The first
+ * exercise is loaded by the server page; subsequent ones come from
+ * /api/exercises/next. Submitting an answer POSTs to /api/attempts
+ * (MM-301). Tutor chat asks /api/tutor for hints/explanations (MM-504).
  */
 export function PracticeSession({
   conceptId,
@@ -191,6 +192,8 @@ export function PracticeSession({
               </button>
             </div>
           </form>
+
+          <TutorChat key={exercise.id} exerciseId={exercise.id} />
         </section>
       )}
     </div>
