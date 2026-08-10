@@ -1,13 +1,11 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { CourseList } from "@/components/courses/CourseList";
 
 /**
- * MM-100: minimal authenticated landing route.
- *
- * This is the redirect target required by MM-100/MM-101's Definition of
- * Done. It intentionally has no course content or role-based UI yet —
- * that is MM-200/MM-104 scope, not this ticket's, per the MVP Execution
- * Rule in IMPLEMENTATION_BACKLOG.md.
+ * MM-100/MM-200: authenticated landing route. Lists the seeded,
+ * read-only courses (MM-200) - no role-based UI yet, that's future
+ * scope per the MVP Execution Rule in IMPLEMENTATION_BACKLOG.md.
  */
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -19,11 +17,17 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
+  const { data: courses } = await supabase
+    .from("vw_courses_active")
+    .select("id, title, description")
+    .order("title");
+
   return (
-    <div className="flex flex-1 flex-col items-center justify-center bg-zinc-50 px-6 py-32 dark:bg-black">
+    <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-8 px-6 py-16">
       <h1 className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">
         Welcome back, {user.email}
       </h1>
+      <CourseList courses={courses ?? []} />
     </div>
   );
 }
