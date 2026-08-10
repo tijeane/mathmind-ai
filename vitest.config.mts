@@ -12,6 +12,9 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(process.cwd(), "."),
+      // server-only throws outside the Next bundler; unit tests import
+      // modules that use it (e.g. lib/ai/gateway.ts).
+      "server-only": path.resolve(process.cwd(), "tests/mocks/server-only.ts"),
     },
   },
 });
