@@ -5,9 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 /**
- * Clears the Supabase session and sends the user to /login. Lives in the
- * shared header so every authenticated screen has a way out without
- * clearing cookies manually.
+ * Clears the Supabase session and sends the user to /login.
  */
 export function SignOutButton() {
   const router = useRouter();
@@ -37,9 +35,9 @@ export function SignOutButton() {
       type="button"
       onClick={handleSignOut}
       disabled={isSigningOut}
-      className="text-sm font-medium text-zinc-600 underline-offset-2 hover:underline disabled:cursor-not-allowed disabled:opacity-60 dark:text-zinc-400"
+      className="rounded-full border border-line px-4 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-background disabled:cursor-not-allowed disabled:opacity-60"
     >
-      {isSigningOut ? "Signing out..." : "Sign out"}
+      {isSigningOut ? "Signing out…" : "Sign out"}
     </button>
   );
 }

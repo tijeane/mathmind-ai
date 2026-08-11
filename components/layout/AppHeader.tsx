@@ -1,28 +1,28 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { BrandMark } from "@/components/layout/BrandMark";
 import { SignOutButton } from "@/components/layout/SignOutButton";
 
 /**
- * Thin app chrome shared across routes: brand mark plus sign-out when
- * authenticated. Contextual back links (course ↔ practice) stay on their
- * pages; this only solves "where am I / how do I leave".
+ * Shared app chrome: brand mark, optional display name, and sign-out.
+ * Contextual back links stay on their pages.
  */
-export async function AppHeader() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
+export function AppHeader({ displayName }: { displayName: string | null }) {
   return (
-    <header className="border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
-      <div className="mx-auto flex h-14 w-full max-w-2xl items-center justify-between px-6">
+    <header className="border-b border-line bg-surface">
+      <div className="mx-auto flex w-full max-w-2xl items-center justify-between px-6 py-4">
         <Link
-          href={user ? "/dashboard" : "/"}
-          className="text-sm font-semibold tracking-tight text-zinc-950 dark:text-zinc-50"
+          href={displayName ? "/dashboard" : "/"}
+          className="flex items-center gap-2"
         >
-          MathMind
+          <BrandMark />
+          <span className="text-base font-semibold tracking-tight text-foreground">MathMind</span>
         </Link>
-        {user ? <SignOutButton /> : null}
+        {displayName ? (
+          <div className="flex items-center gap-3">
+            <span className="hidden text-sm text-foreground-muted sm:inline">{displayName}</span>
+            <SignOutButton />
+          </div>
+        ) : null}
       </div>
     </header>
   );

@@ -20,15 +20,13 @@ export default async function LoginPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center bg-zinc-50 px-6 py-32 dark:bg-black">
+    <div className="flex flex-1 flex-col items-center justify-center px-6 py-32">
       <div className="flex w-full max-w-sm flex-col items-center gap-8">
-        <h1 className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">
-          Sign in to MathMind
-        </h1>
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground">Sign in to MathMind</h1>
         <LoginForm />
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">
+        <p className="text-sm text-foreground-muted">
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="font-medium text-zinc-900 underline dark:text-zinc-100">
+          <Link href="/register" className="font-medium text-primary underline">
             Create one
           </Link>
         </p>

@@ -1,26 +1,68 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Surfaces */
+  --background: #f6f8fc;
+  --surface: #ffffff;
+  --line: #dde3ef;
+
+  /* Text */
+  --foreground: #1d2433;
+  --foreground-muted: #5b6472;
+
+  /* Brand: cobalt "pen" + marigold "highlighter" */
+  --primary: #3454d1;
+  --primary-hover: #2a44ac;
+  --primary-foreground: #ffffff;
+  --accent: #f2a93b;
+  --accent-foreground: #1d2433;
+
+  /* Feedback */
+  --success: #2e9e6b;
+  --success-bg: #e7f5ee;
+  --error: #d64550;
+  --error-bg: #fbeaec;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
   --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-success: var(--success);
+  --color-success-bg: var(--success-bg);
+  --color-error: var(--error);
+  --color-error-bg: var(--error-bg);
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #12151c;
+    --surface: #1a1f29;
+    --line: #2a3040;
+    --foreground: #eef1f7;
+    --foreground-muted: #a3aebd;
+    --primary: #6f8cf0;
+    --primary-hover: #8ba1f3;
+    --primary-foreground: #0e1116;
+    --accent: #f2b95c;
+    --accent-foreground: #1d2433;
+    --success: #4cb888;
+    --success-bg: #16261f;
+    --error: #e2707a;
+    --error-bg: #2b171a;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
