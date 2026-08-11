@@ -23,6 +23,12 @@ type AttemptResult = {
   is_correct: boolean;
 };
 
+const DIFFICULTY_LABELS: Record<number, string> = {
+  1: "Easy",
+  2: "Medium",
+  3: "Hard",
+};
+
 /**
  * MM-300/MM-301/MM-504: one-exercise-at-a-time practice UI. The first
  * exercise is loaded by the server page; subsequent ones come from
@@ -120,33 +126,32 @@ export function PracticeSession({
   return (
     <div className="flex w-full max-w-xl flex-col gap-6">
       <div>
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">Practicing</p>
-        <h1 className="mt-1 text-2xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">
-          {conceptTitle}
-        </h1>
+        <p className="text-sm text-foreground-muted">Practicing</p>
+        <h1 className="mt-1 text-2xl font-semibold tracking-tight text-foreground">{conceptTitle}</h1>
       </div>
 
-      {isLoading && <p className="text-sm text-zinc-600 dark:text-zinc-400">Loading exercise...</p>}
+      {isLoading && (
+        <p className="text-sm text-foreground-muted" role="status">
+          Loading exercise…
+        </p>
+      )}
 
       {error && (
-        <p role="alert" aria-live="polite" className="text-sm text-red-600 dark:text-red-400">
+        <p role="alert" aria-live="polite" className="text-sm text-error">
           {error}
         </p>
       )}
 
       {!isLoading && exercise && (
-        <section className="flex flex-col gap-4 rounded-lg border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-950">
-          <p className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-            Difficulty {exercise.difficulty_level}
-          </p>
-          <p className="text-base text-zinc-900 dark:text-zinc-100">{exercise.prompt}</p>
+        <section className="flex flex-col gap-4 rounded-xl border border-line bg-surface p-5 shadow-sm">
+          <span className="inline-flex w-fit items-center rounded-full bg-accent px-2.5 py-1 text-xs font-medium text-accent-foreground">
+            {DIFFICULTY_LABELS[exercise.difficulty_level] ?? "Practice"}
+          </span>
+          <p className="font-mono text-lg text-foreground">{exercise.prompt}</p>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
             <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor="answer"
-                className="text-sm font-medium text-zinc-900 dark:text-zinc-100"
-              >
+              <label htmlFor="answer" className="text-sm font-medium text-foreground">
                 Your answer
               </label>
               <input
@@ -159,7 +164,7 @@ export function PracticeSession({
                 value={answer}
                 onChange={(event) => setAnswer(event.target.value)}
                 disabled={isSolved || isSubmitting}
-                className="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-500 disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+                className="rounded-md border border-line bg-surface px-3 py-2 font-mono text-sm text-foreground outline-none focus:border-primary disabled:opacity-60"
               />
             </div>
 
@@ -169,8 +174,8 @@ export function PracticeSession({
                 aria-live="polite"
                 className={
                   attemptResult.is_correct
-                    ? "text-sm text-green-700 dark:text-green-400"
-                    : "text-sm text-amber-700 dark:text-amber-400"
+                    ? "rounded-md bg-success-bg px-3 py-2 text-sm font-medium text-success"
+                    : "rounded-md bg-error-bg px-3 py-2 text-sm font-medium text-error"
                 }
               >
                 {attemptResult.is_correct
@@ -183,7 +188,7 @@ export function PracticeSession({
               <button
                 type="submit"
                 disabled={isSubmitting || isSolved || !answer.trim()}
-                className="rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-colors hover:bg-[#383838] disabled:cursor-not-allowed disabled:opacity-60 dark:hover:bg-[#ccc]"
+                className="rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isSubmitting ? "Submitting..." : isSolved ? "Solved" : "Submit answer"}
               </button>
@@ -191,7 +196,7 @@ export function PracticeSession({
                 type="button"
                 onClick={() => void loadExercise(exercise.id)}
                 disabled={isLoading || isSubmitting}
-                className="rounded-full border border-zinc-300 px-5 py-2.5 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:text-zinc-100 dark:hover:bg-zinc-900"
+                className="rounded-full border border-line px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-background disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Next exercise
               </button>

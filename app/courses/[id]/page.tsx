@@ -39,14 +39,12 @@ export default async function CoursePage({ params }: { params: Promise<{ id: str
       <div className="flex flex-col gap-2">
         <Link
           href="/dashboard"
-          className="text-sm text-zinc-600 underline-offset-2 hover:underline dark:text-zinc-400"
+          className="text-sm text-foreground-muted underline-offset-2 hover:underline"
         >
           Back to dashboard
         </Link>
-        <h1 className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">
-          {course.title}
-        </h1>
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">{course.description}</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground">{course.title}</h1>
+        <p className="text-sm text-foreground-muted">{course.description}</p>
       </div>
       <ConceptList concepts={concepts ?? []} />
     </div>

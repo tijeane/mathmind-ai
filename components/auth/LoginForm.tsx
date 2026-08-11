@@ -49,7 +49,7 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="flex w-full max-w-sm flex-col gap-4" noValidate>
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="email" className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+        <label htmlFor="email" className="text-sm font-medium text-foreground">
           Email
         </label>
         <input
@@ -60,12 +60,12 @@ export function LoginForm() {
           required
           value={email}
           onChange={(event) => setEmail(event.target.value)}
-          className="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+          className="rounded-md border border-line bg-surface px-3 py-2 text-sm text-foreground outline-none focus:border-primary"
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="password" className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+        <label htmlFor="password" className="text-sm font-medium text-foreground">
           Password
         </label>
         <input
@@ -76,12 +76,12 @@ export function LoginForm() {
           required
           value={password}
           onChange={(event) => setPassword(event.target.value)}
-          className="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+          className="rounded-md border border-line bg-surface px-3 py-2 text-sm text-foreground outline-none focus:border-primary"
         />
       </div>
 
       {error && (
-        <p role="alert" aria-live="polite" className="text-sm text-red-600 dark:text-red-400">
+        <p role="alert" aria-live="polite" className="text-sm text-error">
           {error}
         </p>
       )}
@@ -89,7 +89,7 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="mt-2 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-colors hover:bg-[#383838] disabled:cursor-not-allowed disabled:opacity-60 dark:hover:bg-[#ccc]"
+        className="mt-2 rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isSubmitting ? "Signing in..." : "Sign in"}
       </button>

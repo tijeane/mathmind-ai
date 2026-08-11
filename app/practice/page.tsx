@@ -55,7 +55,7 @@ export default async function PracticePage({
     <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 px-6 py-16">
       <Link
         href={`/courses/${concept.course_id}`}
-        className="text-sm text-zinc-600 underline-offset-2 hover:underline dark:text-zinc-400"
+        className="text-sm text-foreground-muted underline-offset-2 hover:underline"
       >
         Back to concepts
       </Link>
