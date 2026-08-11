@@ -32,6 +32,7 @@ export const TUTOR_SYSTEM_PROMPT = [
   "5. Use the concept description and the student's recent attempts to address likely misconceptions.",
   "6. Keep language clear and age-appropriate.",
   "7. End with a short question that invites the student to try the next step themselves.",
+  "8. Write math in plain text only (e.g. 3/5 or 3 ÷ 5). Never use LaTeX or backslash commands.",
 ].join("\n");
 
 export function resolveTutorPromptMode(

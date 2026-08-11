@@ -59,7 +59,7 @@ export async function POST(request: Request) {
 
   const { data: exercise, error: exerciseError } = await supabase
     .from("vw_exercises_active")
-    .select("id, answer_key")
+    .select("id, answer_key, prompt")
     .eq("id", exerciseId)
     .maybeSingle();
 
@@ -77,7 +77,9 @@ export async function POST(request: Request) {
     );
   }
 
-  const isCorrect = checkAnswer(submittedAnswer, exercise.answer_key as string);
+  const isCorrect = checkAnswer(submittedAnswer, exercise.answer_key as string, {
+    prompt: exercise.prompt as string,
+  });
 
   const { data: attempt, error: insertError } = await supabase
     .from("attempts")

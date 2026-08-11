@@ -6,6 +6,14 @@
 
 const NUMERIC_TOLERANCE = 1e-6;
 
+export type CheckAnswerOptions = {
+  /**
+   * Exercise prompt text. Used to accept common fill-in variants such as
+   * writing `6/10` when the blank answer key is `6` for `3/5 = ?/10`.
+   */
+  prompt?: string;
+};
+
 function normalizeAnswer(value: string): string {
   return value.trim().toLowerCase().replace(/\s+/g, "");
 }
@@ -38,14 +46,35 @@ export function parseNumericAnswer(value: string): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-export function checkAnswer(submittedAnswer: string, answerKey: string): boolean {
-  const submitted = normalizeAnswer(submittedAnswer);
+/**
+ * Expands a stored answer key with prompt-aware aliases for fill-in blanks.
+ * Example: prompt `3/5 = ?/10`, key `6` → also accepts `6/10`.
+ */
+export function expandAnswerKeys(answerKey: string, prompt?: string): string[] {
   const expected = normalizeAnswer(answerKey);
-
-  if (!submitted || !expected) {
-    return false;
+  if (!expected) {
+    return [];
   }
 
+  const keys = new Set<string>([expected]);
+  if (!prompt) {
+    return [...keys];
+  }
+
+  const blankDenominator = prompt.match(/=\s*\?\/(\d+)/i);
+  if (blankDenominator && /^-?\d+$/.test(expected)) {
+    keys.add(`${expected}/${blankDenominator[1]}`);
+  }
+
+  const blankNumerator = prompt.match(/=\s*(-?\d+)\/\?/i);
+  if (blankNumerator && /^-?\d+$/.test(expected)) {
+    keys.add(`${blankNumerator[1]}/${expected}`);
+  }
+
+  return [...keys];
+}
+
+function matchesSingleKey(submitted: string, expected: string): boolean {
   if (submitted === expected) {
     return true;
   }
@@ -58,4 +87,19 @@ export function checkAnswer(submittedAnswer: string, answerKey: string): boolean
   }
 
   return Math.abs(submittedNumeric - expectedNumeric) <= NUMERIC_TOLERANCE;
+}
+
+export function checkAnswer(
+  submittedAnswer: string,
+  answerKey: string,
+  options: CheckAnswerOptions = {},
+): boolean {
+  const submitted = normalizeAnswer(submittedAnswer);
+  if (!submitted) {
+    return false;
+  }
+
+  return expandAnswerKeys(answerKey, options.prompt).some((expected) =>
+    matchesSingleKey(submitted, expected),
+  );
 }

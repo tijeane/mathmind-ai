@@ -28,6 +28,9 @@ type AttemptResult = {
  * exercise is loaded by the server page; subsequent ones come from
  * /api/exercises/next. Submitting an answer POSTs to /api/attempts
  * (MM-301). Tutor chat asks /api/tutor for hints/explanations (MM-504).
+ *
+ * Incorrect answers stay retryable so the student can use the tutor and
+ * try again; only a correct answer locks the input for this exercise.
  */
 export function PracticeSession({
   conceptId,
@@ -41,6 +44,8 @@ export function PracticeSession({
   const [error, setError] = useState<string | null>(initialError);
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const isSolved = attemptResult?.is_correct === true;
 
   async function loadExercise(excludeId?: string | null) {
     setIsLoading(true);
@@ -77,7 +82,7 @@ export function PracticeSession({
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!exercise || !answer.trim() || attemptResult !== null) {
+    if (!exercise || !answer.trim() || isSolved) {
       return;
     }
 
@@ -153,7 +158,7 @@ export function PracticeSession({
                 required
                 value={answer}
                 onChange={(event) => setAnswer(event.target.value)}
-                disabled={attemptResult !== null || isSubmitting}
+                disabled={isSolved || isSubmitting}
                 className="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-500 disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
               />
             </div>
@@ -170,17 +175,17 @@ export function PracticeSession({
               >
                 {attemptResult.is_correct
                   ? `Correct! Your answer: ${attemptResult.submitted_answer}`
-                  : `Not quite. Your answer: ${attemptResult.submitted_answer}`}
+                  : `Not quite. Your answer: ${attemptResult.submitted_answer} — try again, or ask the tutor for a hint.`}
               </p>
             )}
 
             <div className="flex flex-wrap gap-3">
               <button
                 type="submit"
-                disabled={isSubmitting || attemptResult !== null || !answer.trim()}
+                disabled={isSubmitting || isSolved || !answer.trim()}
                 className="rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-colors hover:bg-[#383838] disabled:cursor-not-allowed disabled:opacity-60 dark:hover:bg-[#ccc]"
               >
-                {isSubmitting ? "Submitting..." : "Submit answer"}
+                {isSubmitting ? "Submitting..." : isSolved ? "Solved" : "Submit answer"}
               </button>
               <button
                 type="button"

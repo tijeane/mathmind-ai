@@ -133,4 +133,59 @@ describe("PracticeSession", () => {
 
     expect(await screen.findByRole("alert")).toHaveTextContent("Could not submit your answer.");
   });
+
+  it("allows another attempt after an incorrect answer", async () => {
+    (fetch as unknown as ReturnType<typeof vi.fn>).mockImplementation(
+      async (input: RequestInfo | URL, init?: RequestInit) => {
+        const url = String(input);
+
+        if (url.startsWith("/api/attempts") && init?.method === "POST") {
+          const body = JSON.parse(String(init.body)) as { submitted_answer: string };
+          const isCorrect = body.submitted_answer === "1/2";
+
+          return {
+            ok: true,
+            json: async () => ({
+              data: {
+                id: isCorrect ? "attempt-2" : "attempt-1",
+                exercise_id: "ex-1",
+                submitted_answer: body.submitted_answer,
+                is_correct: isCorrect,
+                created_at: "2026-08-10T00:00:00.000Z",
+              },
+            }),
+          };
+        }
+
+        return {
+          ok: true,
+          json: async () => ({ data: null }),
+        };
+      },
+    );
+
+    render(
+      <PracticeSession
+        conceptId="concept-1"
+        conceptTitle="Understanding Parts of a Whole"
+        initialExercise={exercise}
+      />,
+    );
+
+    const answerInput = screen.getByLabelText("Your answer");
+
+    fireEvent.change(answerInput, { target: { value: "2/3" } });
+    fireEvent.click(screen.getByRole("button", { name: /submit answer/i }));
+
+    expect(await screen.findByRole("status")).toHaveTextContent(/not quite/i);
+    expect(answerInput).toBeEnabled();
+    expect(screen.getByRole("button", { name: /submit answer/i })).toBeEnabled();
+
+    fireEvent.change(answerInput, { target: { value: "1/2" } });
+    fireEvent.click(screen.getByRole("button", { name: /submit answer/i }));
+
+    expect(await screen.findByRole("status")).toHaveTextContent(/correct! your answer: 1\/2/i);
+    expect(answerInput).toBeDisabled();
+    expect(screen.getByRole("button", { name: /solved/i })).toBeDisabled();
+  });
 });

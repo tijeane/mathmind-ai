@@ -47,6 +47,31 @@ describe("TutorChat", () => {
     expect(screen.getByText("Can you give me a hint?")).toBeInTheDocument();
   });
 
+  it("renders tutor LaTeX as plain fractions", async () => {
+    (fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        data: {
+          content: "Start from \\( \\frac{3}{5} \\) and think about the denominator.",
+          mode: "explain",
+          rejected: false,
+        },
+      }),
+    });
+
+    render(<TutorChat exerciseId="ex-1" />);
+
+    fireEvent.change(screen.getByLabelText("Question for the tutor"), {
+      target: { value: "show me the steps" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /ask tutor/i }));
+
+    expect(
+      await screen.findByText("Start from 3/5 and think about the denominator."),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/\\frac/)).not.toBeInTheDocument();
+  });
+
   it("shows an error when the tutor API fails", async () => {
     (fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       ok: false,

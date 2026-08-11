@@ -17,15 +17,17 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  const { data: courses } = await supabase
-    .from("vw_courses_active")
-    .select("id, title, description")
-    .order("title");
+  const [{ data: profile }, { data: courses }] = await Promise.all([
+    supabase.from("profiles").select("display_name").eq("id", user.id).maybeSingle(),
+    supabase.from("vw_courses_active").select("id, title, description").order("title"),
+  ]);
+
+  const greetingName = profile?.display_name?.trim() || user.email || "there";
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-8 px-6 py-16">
       <h1 className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">
-        Welcome back, {user.email}
+        Welcome back, {greetingName}
       </h1>
       <CourseList courses={courses ?? []} />
     </div>

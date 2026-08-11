@@ -80,6 +80,8 @@ describe("buildTutorPrompt (MM-502)", () => {
       expect(system.toLowerCase()).toContain("reasoning");
       expect(system.toLowerCase()).toMatch(/never state the exercise's final answer/);
       expect(system.toLowerCase()).toContain("single-level hint");
+      expect(system.toLowerCase()).toContain("plain text");
+      expect(system.toLowerCase()).toContain("latex");
 
       expect(user).toContain(context.exercise.prompt);
       expect(user).toContain(context.concept.title);

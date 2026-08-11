@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { formatTutorContent } from "@/lib/ai/formatTutorContent";
 
 type TutorMessage = {
   role: "student" | "tutor";
@@ -53,7 +54,10 @@ export function TutorChat({ exerciseId }: TutorChatProps) {
         return;
       }
 
-      setMessages((current) => [...current, { role: "tutor", content: payload.data!.content }]);
+      setMessages((current) => [
+        ...current,
+        { role: "tutor", content: formatTutorContent(payload.data!.content) },
+      ]);
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
